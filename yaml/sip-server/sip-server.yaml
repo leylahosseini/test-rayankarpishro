@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sip-server
+#  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: sip-server
+  replicas: 1
+  strategy:
+     type: RollingUpdate
+     rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+ 
+  template:
+    metadata:
+      labels:
+        app: sip-server
+    spec:
+      containers:
+      - name: sip-server
+        image: sip-server:1.1
+        imagePullPolicy: Never
+#        resources:
+#          limits:
+#            memory: "1024Mi"
+#            cpu: "1000m"
+        ports:
+        - containerPort: 5060
+          protocol: UDP
+        env:
+        - name: MYSQL_DATABASE 
+          value: mya2billing
+        - name: MYSQL_PASSWORD
+          value: a2billing
+        - name: MYSQL_ROOT_PASSWORD 
+          value: "123456"
+        - name: MYSQL_USER
+          value: a2billinguser
+        - name: MYSQL_ROOT_HOST
+          value: '%'
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sip-server
+  name: sip-server
+#  namespace: default
+spec:
+  type: LoadBalancer
+  externalIPs:
+   - 163.172.174.53
+  ports:
+    - port: 5060
+      targetPort: 5060
+      protocol: UDP
+      name: sip-server-udp
+  selector:
+    app: sip-server

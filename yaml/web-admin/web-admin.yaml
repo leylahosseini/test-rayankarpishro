@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-admin
+#  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: web-admin
+  replicas: 1
+  strategy:
+     type: RollingUpdate
+     rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+ 
+  template:
+    metadata:
+      labels:
+        app: web-admin
+    spec:
+      containers:
+      - name: web-admin
+        image: web-admin:1.1
+        imagePullPolicy: Never
+#        resources:
+#          limits:
+#            memory: "1024Mi"
+#            cpu: "1000m"
+        ports:
+        - containerPort: 80
+        env:
+        - name: MYSQL_DATABASE 
+          value: mya2billing
+        - name: MYSQL_PASSWORD
+          value: a2billing
+        - name: MYSQL_ROOT_PASSWORD 
+          value: "123456"
+        - name: MYSQL_USER
+          value: a2billinguser
+        - name: MYSQL_ROOT_HOST
+          value: '%'
+        - name: PMA_HOST
+          value: db-server
+        - name: PMA_PORT
+          value: "3306"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web-admin
+  name: web-admin
+#  namespace: default
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      name: web-admin
+  selector:
+    app: web-admin

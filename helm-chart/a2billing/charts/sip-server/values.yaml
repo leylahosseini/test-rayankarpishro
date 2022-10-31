@@ -1,0 +1,13 @@
+kubernetesClusterDomain: cluster.local
+sipServer:
+  ports:
+  - name: sip-server-udp
+    port: 5060
+    protocol: UDP
+    targetPort: 5060
+  replicas: 1
+  sipServer:
+    image:
+      repository: sip-server
+      tag: "1.1"
+  type: LoadBalancer

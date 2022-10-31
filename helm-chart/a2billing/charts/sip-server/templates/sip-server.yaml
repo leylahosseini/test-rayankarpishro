@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sip-server.fullname" . }}-sip-server
+  labels:
+    app: sip-server
+  {{- include "sip-server.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.sipServer.type }}
+  selector:
+    app: sip-server
+  {{- include "sip-server.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.sipServer.ports | toYaml | nindent 2 -}}

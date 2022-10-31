@@ -1,0 +1,12 @@
+kubernetesClusterDomain: cluster.local
+phpmyadmin:
+  phpmyadmin:
+    image:
+      repository: phpmyadmin/phpmyadmin
+      tag: latest
+  ports:
+  - name: phpmyadmin
+    port: 80
+    targetPort: 80
+  replicas: 1
+  type: NodePort

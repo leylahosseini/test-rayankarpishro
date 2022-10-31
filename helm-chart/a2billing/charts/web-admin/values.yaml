@@ -1,0 +1,12 @@
+kubernetesClusterDomain: cluster.local
+webAdmin:
+  ports:
+  - name: web-admin
+    port: 80
+    targetPort: 80
+  replicas: 1
+  type: NodePort
+  webAdmin:
+    image:
+      repository: web-admin
+      tag: "1.1"

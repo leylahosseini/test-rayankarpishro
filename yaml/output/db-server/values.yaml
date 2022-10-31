@@ -1,0 +1,12 @@
+dbServer:
+  dbServer:
+    image:
+      repository: mysql-test
+      tag: "1.1"
+  ports:
+  - name: db-server
+    port: 3306
+    targetPort: 3306
+  replicas: 1
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local

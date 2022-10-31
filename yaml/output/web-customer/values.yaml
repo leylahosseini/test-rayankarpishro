@@ -1,0 +1,12 @@
+kubernetesClusterDomain: cluster.local
+webCustomer:
+  ports:
+  - name: web-customer
+    port: 80
+    targetPort: 80
+  replicas: 1
+  type: NodePort
+  webCustomer:
+    image:
+      repository: web-customer
+      tag: "1.1"

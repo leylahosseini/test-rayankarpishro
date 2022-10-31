@@ -1,0 +1,7 @@
+cat db-server/mysql.yaml |./helmify output/db-server
+cat phpmyadmin/phpmyadmin.yaml |./helmify output/phpmyadmin
+cat sip-server/sip-server.yaml |./helmify output/sip-server
+cat web-admin/web-admin.yaml |./helmify output/web-admin
+cat web-customer/web-customer.yaml |./helmify output/web-customer
+cat nginx/ingress-1-http.yaml |./helmify output/nginx
+

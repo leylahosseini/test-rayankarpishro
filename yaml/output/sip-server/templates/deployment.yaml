@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sip-server.fullname" . }}-sip-server
+  labels:
+  {{- include "sip-server.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.sipServer.replicas }}
+  selector:
+    matchLabels:
+      app: sip-server
+    {{- include "sip-server.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: sip-server
+      {{- include "sip-server.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: mya2billing
+        - name: MYSQL_PASSWORD
+          value: a2billing
+        - name: MYSQL_ROOT_PASSWORD
+          value: "123456"
+        - name: MYSQL_USER
+          value: a2billinguser
+        - name: MYSQL_ROOT_HOST
+          value: %
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.sipServer.sipServer.image.repository }}:{{ .Values.sipServer.sipServer.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: Never
+        name: sip-server
+        ports:
+        - containerPort: 5060
+          protocol: UDP
+        resources: {}

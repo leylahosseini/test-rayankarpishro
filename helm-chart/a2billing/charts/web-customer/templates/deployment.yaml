@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "web-customer.fullname" . }}-web-customer
+  labels:
+  {{- include "web-customer.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.webCustomer.replicas }}
+  selector:
+    matchLabels:
+      app: web-customer
+    {{- include "web-customer.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: web-customer
+      {{- include "web-customer.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: mya2billing
+        - name: MYSQL_PASSWORD
+          value: a2billing
+        - name: MYSQL_ROOT_PASSWORD
+          value: "123456"
+        - name: MYSQL_USER
+          value: a2billinguser
+        - name: MYSQL_ROOT_HOST
+          value: %
+        - name: PMA_HOST
+          value: db-server
+        - name: PMA_PORT
+          value: "3306"
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.webCustomer.webCustomer.image.repository }}:{{ .Values.webCustomer.webCustomer.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: Never
+        name: web-customer
+        ports:
+        - containerPort: 80
+        resources: {}
